@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.license                = package['license']
   s.author                 = 'Simon Bugert <simon.bugert@gmail.com>, Koen Punt <koen@koenpunt.nl>'
   s.platforms              = { :ios => '9.0', :tvos => '9.2' }
-  s.source                 = { :git => 'https://github.com/sbugert/react-native-admob.git', :tag => "v#{version}" }
+  s.source                 = { :git => 'https://github.com/Cdiscount/react-native-admob.git', :tag => "v#{version}" }
   s.source_files           = 'ios/*.{h,m}'
 
   # We can't add the Google-Mobile-Ads-SDK as a dependency, as it would prevent
