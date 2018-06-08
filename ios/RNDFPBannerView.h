@@ -15,6 +15,7 @@
 @property (nonatomic, copy) NSString *targeting;
 @property (nonatomic, copy) NSString *fixedWidth;
 @property (nonatomic, copy) NSString *fixedHeight;
+@property (nonatomic) BOOL useFixedSizes;
 
 @property (nonatomic, copy) RCTBubblingEventBlock onSizeChange;
 @property (nonatomic, copy) RCTBubblingEventBlock onAppEvent;

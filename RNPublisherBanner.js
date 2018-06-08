@@ -5,7 +5,7 @@ import {
   findNodeHandle,
   ViewPropTypes,
 } from 'react-native';
-import { string, func, arrayOf } from 'prop-types';
+import { bool, string, func, arrayOf } from 'prop-types';
 
 import { createErrorFromErrorData } from './utils';
 
@@ -112,6 +112,7 @@ PublisherBanner.propTypes = {
    */
   fixedWidth: string,
   fixedHeight: string,
+  useFixedSizes: bool,
 
   /**
    * Array of test devices. Use PublisherBanner.simulatorId for the simulator

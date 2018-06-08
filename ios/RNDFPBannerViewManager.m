@@ -44,6 +44,7 @@ RCT_EXPORT_VIEW_PROPERTY(testDevices, NSArray)
 RCT_EXPORT_VIEW_PROPERTY(targeting, NSString)
 RCT_EXPORT_VIEW_PROPERTY(fixedWidth, NSString)
 RCT_EXPORT_VIEW_PROPERTY(fixedHeight, NSString)
+RCT_EXPORT_VIEW_PROPERTY(useFixedSizes, BOOL)
 
 RCT_EXPORT_VIEW_PROPERTY(onSizeChange, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onAppEvent, RCTBubblingEventBlock)
