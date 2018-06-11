@@ -58,7 +58,13 @@
         NSString *finString = [array objectAtIndex:compteur];
 
         if(!CGRectEqualToRect(self.bounds, _bannerView.bounds)) {
-            if ([finString isEqualToString:@"native1"] || [finString isEqualToString:@"native2"]) {
+            if (_useFixedSizes) {
+                self.onSizeChange(@{
+                                    @"width": [NSNumber numberWithFloat: [_fixedWidth intValue]],
+                                    @"height": [NSNumber numberWithFloat: [_fixedHeight intValue]]
+                                    });
+            } else if ([finString isEqualToString:@"native1"] || [finString isEqualToString:@"native2"]) {
+                // Deprecated : native modules should not use business specific keys
                 self.onSizeChange(@{
                                     @"width": [NSNumber numberWithFloat: [_fixedWidth intValue]],
                                     @"height": [NSNumber numberWithFloat: [_fixedHeight intValue]]
@@ -115,7 +121,10 @@
     NSArray *array = [_bannerView.adUnitID componentsSeparatedByString:@"/"];
     int compteur = (int)[array count] - 1;
     NSString *finString = [array objectAtIndex:compteur];
-    if ([finString isEqualToString:@"native1"] || [finString isEqualToString:@"native2"]) {
+    if (_useFixedSizes) {
+        _bannerView.frame = CGRectMake(self.bounds.origin.x, self.bounds.origin.x, [_fixedWidth intValue], [_fixedHeight intValue]);
+    } else if ([finString isEqualToString:@"native1"] || [finString isEqualToString:@"native2"]) {
+        // Deprecated : native modules should not use business specific keys
         _bannerView.frame = CGRectMake(self.bounds.origin.x, self.bounds.origin.x, [_fixedWidth intValue], [_fixedHeight intValue]);
     } else {
         _bannerView.frame = CGRectMake(self.bounds.origin.x, self.bounds.origin.x, _bannerView.frame.size.width, _bannerView.frame.size.height);

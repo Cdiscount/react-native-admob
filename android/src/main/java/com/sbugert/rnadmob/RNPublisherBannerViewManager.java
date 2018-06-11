@@ -41,6 +41,7 @@ class ReactPublisherAdView extends ReactViewGroup implements AppEventListener {
     String targetString = null;
     int fixedWidth = 0;
     int fixedHeight = 0;
+    boolean useFixedSizes = false;
 
     public ReactPublisherAdView(final Context context) {
         super(context);
@@ -61,7 +62,19 @@ class ReactPublisherAdView extends ReactViewGroup implements AppEventListener {
                 int left = adView.getLeft();
                 int top = adView.getTop();
 
-                if (adView.getAdUnitId().split("/")[adView.getAdUnitId().split("/").length - 1].equals("native1") || adView.getAdUnitId().split("/")[adView.getAdUnitId().split("/").length - 1].equals("native2")) {
+                if (useFixedSizes) {
+                    WindowManager mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                    Display display = mWindowManager.getDefaultDisplay();
+                    DisplayMetrics displaymetrics = new DisplayMetrics();
+                    display.getMetrics(displaymetrics);
+                    adView.setAdSizes(new AdSize(fixedWidth, fixedHeight));
+                    width = adView.getAdSize().getWidthInPixels(context);
+                    height = adView.getAdSize().getHeightInPixels(context);
+                    left = adView.getLeft();
+                    top = adView.getTop();
+
+                } else if (adView.getAdUnitId().split("/")[adView.getAdUnitId().split("/").length - 1].equals("native1") || adView.getAdUnitId().split("/")[adView.getAdUnitId().split("/").length - 1].equals("native2")) {
+                    // Deprecated : native modules should not use business specific keys
                     WindowManager mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
                     Display display = mWindowManager.getDefaultDisplay();
                     DisplayMetrics displaymetrics = new DisplayMetrics();
@@ -234,6 +247,10 @@ class ReactPublisherAdView extends ReactViewGroup implements AppEventListener {
         this.fixedWidth = width;
     }
 
+    public void setPropUseFixedSizes(boolean useFixedSizes) {
+        this.useFixedSizes = useFixedSizes;
+    }
+
     @Override
     public void onAppEvent(String name, String info) {
         WritableMap event = Arguments.createMap();
@@ -254,6 +271,7 @@ public class RNPublisherBannerViewManager extends ViewGroupManager<ReactPublishe
     public static final String PROP_BANNER_TARGETING = "targeting";
     public static final String PROP_FIXED_WIDTH = "fixedWidth";
     public static final String PROP_FIXED_HEIGHT = "fixedHeight";
+    public static final String PROP_USE_FIXED_SIZES = "useFixedSizes";
 
     public static final String EVENT_SIZE_CHANGE = "onSizeChange";
     public static final String EVENT_AD_LOADED = "onAdLoaded";
@@ -346,6 +364,11 @@ public class RNPublisherBannerViewManager extends ViewGroupManager<ReactPublishe
         fixedHeight = Integer.parseInt(heightString);
         view.setPropFixedHeight(fixedHeight);
         view.setAdSize(new AdSize(fixedWidth, fixedHeight));
+     }
+
+     @ReactProp(name = PROP_USE_FIXED_SIZES)
+     public void setPropUseFixedSizes(final ReactPublisherAdView view, final boolean useFixedSizes) {
+        view.setPropUseFixedSizes(useFixedSizes);
      }
 
      @ReactProp(name = PROP_BANNER_TARGETING)
