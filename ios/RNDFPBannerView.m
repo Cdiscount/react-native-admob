@@ -33,7 +33,7 @@
         UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
         UIViewController *rootViewController = [keyWindow rootViewController];
 
-        _bannerView = [[DFPBannerView alloc] initWithAdSize:kGADAdSizeBanner];
+        _bannerView = [[DFPBannerView alloc] initWithAdSize:kGADAdSizeFluid];
         _bannerView.delegate = self;
         _bannerView.adSizeDelegate = self;
         _bannerView.appEventDelegate = self;
@@ -54,25 +54,6 @@
 
 - (void)loadBanner {
     if (_targeting) {
-        NSArray *array = [_bannerView.adUnitID componentsSeparatedByString:@"/"];
-        int compteur = (int)[array count] - 1;
-        NSString *finString = [array objectAtIndex:compteur];
-
-        if(!CGRectEqualToRect(self.bounds, _bannerView.bounds)) {
-            if (_useFixedSizes) {
-                self.onSizeChange(@{
-                                    @"width": [NSNumber numberWithFloat: [_fixedWidth intValue]],
-                                    @"height": [NSNumber numberWithFloat: [_fixedHeight intValue]]
-                                    });
-            } else if ([finString isEqualToString:@"native1"] || [finString isEqualToString:@"native2"]) {
-                // Deprecated : native modules should not use business specific keys
-                self.onSizeChange(@{
-                                    @"width": [NSNumber numberWithFloat: [_fixedWidth intValue]],
-                                    @"height": [NSNumber numberWithFloat: [_fixedHeight intValue]]
-                                    });
-            }
-        }
-
         DFPRequest *request = [DFPRequest request];
         if ([_targeting length] > 0) {
             NSArray *array = [_targeting componentsSeparatedByString:@"|"];
@@ -124,15 +105,10 @@
 {
     [super layoutSubviews];
 
-    NSArray *array = [_bannerView.adUnitID componentsSeparatedByString:@"/"];
-    int compteur = (int)[array count] - 1;
-    NSString *finString = [array objectAtIndex:compteur];
     if (_useFixedSizes) {
         _bannerView.frame = CGRectMake(self.bounds.origin.x, self.bounds.origin.x, [_fixedWidth intValue], [_fixedHeight intValue]);
-    } else if ([finString isEqualToString:@"native1"] || [finString isEqualToString:@"native2"]) {
-        // Deprecated : native modules should not use business specific keys
-        _bannerView.frame = CGRectMake(self.bounds.origin.x, self.bounds.origin.x, [_fixedWidth intValue], [_fixedHeight intValue]);
-    } else {
+    }
+    else {
         _bannerView.frame = CGRectMake(self.bounds.origin.x, self.bounds.origin.x, _bannerView.frame.size.width, _bannerView.frame.size.height);
     }
 
