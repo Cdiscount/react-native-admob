@@ -120,10 +120,14 @@
 /// Tells the delegate an ad request loaded an ad.
 - (void)adViewDidReceiveAd:(DFPBannerView *)adView
 {
-    if (self.onSizeChange) {
+    if(_useFixedSizes){
         self.onSizeChange(@{
                             @"width": @([_fixedWidth intValue]),
                             @"height": @([_fixedHeight intValue]) });
+    } else {
+        self.onSizeChange(@{
+                            @"width": @(_bannerView.frame.size.width),
+                            @"height": @(_bannerView.frame.size.height) });
     }
     if (self.onAdLoaded) {
         self.onAdLoaded(@{});
@@ -169,9 +173,15 @@ didFailToReceiveAdWithError:(GADRequestError *)error
 
 - (void)adView:(GADBannerView *)bannerView willChangeAdSizeTo:(GADAdSize)size
 {
-    self.onSizeChange(@{
+    if(_useFixedSizes){
+        self.onSizeChange(@{
                         @"width": @([_fixedWidth intValue]),
                         @"height": @([_fixedHeight intValue]) });
+    } else {
+        self.onSizeChange(@{
+                            @"width": @(_bannerView.frame.size.width),
+                            @"height": @(_bannerView.frame.size.height) });
+    }
 }
 
 # pragma mark GADAppEventDelegate
