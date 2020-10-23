@@ -1,16 +1,14 @@
+import { arrayOf, func, string } from 'prop-types';
 import React, { Component } from 'react';
 import {
+  findNodeHandle,
   requireNativeComponent,
   UIManager,
-  findNodeHandle,
   ViewPropTypes,
 } from 'react-native';
-import { string, func, arrayOf } from 'prop-types';
-
 import { createErrorFromErrorData } from './utils';
 
 class AdMobBanner extends Component {
-
   constructor() {
     super();
     this.handleSizeChange = this.handleSizeChange.bind(this);
@@ -27,8 +25,8 @@ class AdMobBanner extends Component {
   loadBanner() {
     UIManager.dispatchViewManagerCommand(
       findNodeHandle(this._bannerView),
-      UIManager.RNGADBannerView.Commands.loadBanner,
-      null,
+      UIManager.getViewManagerConfig('RNGADBannerView').Commands.loadBanner,
+      null
     );
   }
 
@@ -42,7 +40,9 @@ class AdMobBanner extends Component {
 
   handleAdFailedToLoad(event) {
     if (this.props.onAdFailedToLoad) {
-      this.props.onAdFailedToLoad(createErrorFromErrorData(event.nativeEvent.error));
+      this.props.onAdFailedToLoad(
+        createErrorFromErrorData(event.nativeEvent.error)
+      );
     }
   }
 
@@ -53,17 +53,13 @@ class AdMobBanner extends Component {
         style={[this.props.style, this.state.style]}
         onSizeChange={this.handleSizeChange}
         onAdFailedToLoad={this.handleAdFailedToLoad}
-        ref={el => (this._bannerView = el)}
+        ref={(el) => (this._bannerView = el)}
       />
     );
   }
 }
 
-Object.defineProperty(AdMobBanner, 'simulatorId', {
-  get() {
-    return UIManager.RNGADBannerView.Constants.simulatorId;
-  },
-});
+AdMobBanner.simulatorId = 'SIMULATOR';
 
 AdMobBanner.propTypes = {
   ...ViewPropTypes,

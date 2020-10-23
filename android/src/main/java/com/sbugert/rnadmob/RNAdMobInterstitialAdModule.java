@@ -81,7 +81,10 @@ public class RNAdMobInterstitialAdModule extends ReactContextBaseJavaModule {
                         WritableMap error = Arguments.createMap();
                         event.putString("message", errorMessage);
                         sendEvent(EVENT_AD_FAILED_TO_LOAD, event);
-                        mRequestAdPromise.reject(errorString, errorMessage);
+                        if (mRequestAdPromise != null) {
+                            mRequestAdPromise.reject(errorString, errorMessage);
+                            mRequestAdPromise = null;
+                        }
                     }
                     @Override
                     public void onAdLeftApplication() {
@@ -90,7 +93,10 @@ public class RNAdMobInterstitialAdModule extends ReactContextBaseJavaModule {
                     @Override
                     public void onAdLoaded() {
                         sendEvent(EVENT_AD_LOADED, null);
-                        mRequestAdPromise.resolve(null);
+                        if (mRequestAdPromise != null) {
+                          mRequestAdPromise.resolve(null);
+                          mRequestAdPromise = null;
+                        }
                     }
                     @Override
                     public void onAdOpened() {
@@ -130,7 +136,11 @@ public class RNAdMobInterstitialAdModule extends ReactContextBaseJavaModule {
                     AdRequest.Builder adRequestBuilder = new AdRequest.Builder();
                     if (testDevices != null) {
                         for (int i = 0; i < testDevices.length; i++) {
-                            adRequestBuilder.addTestDevice(testDevices[i]);
+                            String testDevice = testDevices[i];
+                            if (testDevice == "SIMULATOR") {
+                                testDevice = AdRequest.DEVICE_ID_EMULATOR;
+                            }
+                            adRequestBuilder.addTestDevice(testDevice);
                         }
                     }
                     AdRequest adRequest = adRequestBuilder.build();
@@ -163,13 +173,5 @@ public class RNAdMobInterstitialAdModule extends ReactContextBaseJavaModule {
                 callback.invoke(mInterstitialAd.isLoaded());
             }
         });
-    }
-
-    @javax.annotation.Nullable
-    @Override
-    public Map<String, Object> getConstants() {
-        final Map<String, Object> constants = new HashMap<>();
-        constants.put("simulatorId", AdRequest.DEVICE_ID_EMULATOR);
-        return constants;
     }
 }

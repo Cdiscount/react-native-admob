@@ -1,8 +1,4 @@
-import {
-  NativeModules,
-  NativeEventEmitter,
-} from 'react-native';
-
+import { NativeEventEmitter, NativeModules } from 'react-native';
 import { createErrorFromErrorData } from './utils';
 
 const RNAdMobInterstitial = NativeModules.RNAdMobInterstitial;
@@ -24,15 +20,18 @@ const addEventListener = (event, handler) => {
   if (mappedEvent) {
     let listener;
     if (event === 'adFailedToLoad') {
-      listener = eventEmitter.addListener(mappedEvent, error => handler(createErrorFromErrorData(error)));
+      listener = eventEmitter.addListener(mappedEvent, (error) =>
+        handler(createErrorFromErrorData(error))
+      );
     } else {
       listener = eventEmitter.addListener(mappedEvent, handler);
     }
     _subscriptions.set(handler, listener);
     return {
-      remove: () => removeEventListener(event, handler)
+      remove: () => removeEventListener(event, handler),
     };
   } else {
+    // eslint-disable-next-line no-console
     console.warn(`Trying to subscribe to unknown event: "${event}"`);
     return {
       remove: () => {},
@@ -61,4 +60,5 @@ export default {
   addEventListener,
   removeEventListener,
   removeAllListeners,
+  simulatorId: 'SIMULATOR',
 };
